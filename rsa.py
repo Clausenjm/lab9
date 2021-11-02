@@ -41,9 +41,10 @@ Summary: (Summarize your experience with the lab, what you learned, what you lik
 
 
 """
-
+import math
 import random
 import sys
+
 
 # Use these named constants as you write your code
 MAX_PRIME = 0b11111111  # The maximum value a prime number can have
@@ -250,6 +251,47 @@ def create_keys():
     """
 
     pass  # Delete this line and complete this method
+
+
+def eight_bit_number_generator():
+    """
+    :author: Eli Hamp
+    :return:
+    """
+    i = MIN_PRIME
+    j = MAX_PRIME
+    rand = random.randint(i, j)
+    rand = rand
+    rand = rand | 0b11000001
+    return int(rand)
+
+
+def check_prime(num):
+    """
+    :author: Eli Hamp
+    :param num:
+    :return:
+    """
+    i = 2
+    prime = True
+    while i <= num/2:
+        mod = num % i
+        if mod != 0:
+            i += 1
+        else:
+            prime = False
+            break
+    return prime
+
+
+def check_coprime(prime_num):
+    """
+    :author: Eli Hamp
+    :param prime_num:
+    :return:
+    """
+    num = prime_num - 1
+    return (num % PUBLIC_EXPONENT) != 0
 
 
 def apply_key(key, m):
