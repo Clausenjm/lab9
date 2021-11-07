@@ -3,8 +3,8 @@
 - Fall 2020
 - Lab 9
 - Names:
-  - 
-  -
+  - Josiah Clausen
+  - Elisha Hamp
 
 16-bit RSA
 
@@ -249,8 +249,9 @@ def create_keys():
 
     :return: the keys as a three-tuple: (e,d,n)
     """
-
-    pass  # Delete this line and complete this method
+    d, n = generate_components(211, 251)
+    tup = PUBLIC_EXPONENT, d, n
+    return tup
 
 
 def eight_bit_number_generator():
@@ -294,6 +295,32 @@ def check_coprime(prime_num):
     return (num % PUBLIC_EXPONENT) != 0
 
 
+def generate_components(p, q):
+    """
+    :author Josiah clausen
+    :param p: prime number 1
+    :param q: prime number 2
+    :return: a tuple of the private and public key
+    """
+    n = p * q
+    z = (p - 1) * (q - 1)
+    t = 0
+    r = z
+    newt = 1
+    newr = 17
+    while not newr == 0:
+        quotient = r // newr
+        t, newt = (newt, t - quotient * newt)
+        r, newr = (newr, r - quotient * newr)
+    if r > 1:
+        print("a is not invertible")
+    if t < 0:
+        t = t + z
+
+    return t, n
+
+
+
 def apply_key(key, m):
     """
     Apply the key, given as a tuple (e,n) or (d,n) to the message.
@@ -306,8 +333,9 @@ def apply_key(key, m):
              if given the public key and a message, encrypts the message
              and returns the ciphertext.
     """
-
-    pass  # Delete this line and complete this method
+    mod, n = key
+    message = (m**mod) % n
+    return message
 
 
 def break_key(pub):
@@ -321,8 +349,13 @@ def break_key(pub):
     :param pub: a tuple containing the public key (e,n)
     :return: a tuple containing the private key (d,n)
     """
-    pass  # Delete this line and complete this method
+    #broken = False
+#/while not broken:
+    pass
 
+def find_n_and_q(public_key):
+
+    return 1
 
 # Your code and additional functions go here. (Replace this line.)
 
