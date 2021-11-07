@@ -249,7 +249,15 @@ def create_keys():
 
     :return: the keys as a three-tuple: (e,d,n)
     """
-    d, n = generate_components(211, 251)
+    # generates p & q and then makes them both
+    # p r i m e
+    p = eight_bit_number_generator()
+    make_prime(p)
+    q = eight_bit_number_generator()
+    make_prime(q)
+
+    # d, n = generate_components(211, 251)
+    d, n = generate_components(p, q)
     tup = PUBLIC_EXPONENT, d, n
     return tup
 
@@ -267,22 +275,20 @@ def eight_bit_number_generator():
     return int(rand)
 
 
-def check_prime(num):
+def make_prime(num):
     """
     :author: Eli Hamp
     :param num:
     :return:
     """
     i = 2
-    prime = True
     while i <= num/2:
         mod = num % i
         if mod != 0:
             i += 1
         else:
-            prime = False
-            break
-    return prime
+            num = make_prime(num + 2)
+    return num
 
 
 def check_coprime(prime_num):
