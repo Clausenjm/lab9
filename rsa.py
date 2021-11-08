@@ -256,6 +256,7 @@ def create_keys():
     q = eight_bit_number_generator()
     make_prime(q)
 
+
     # d, n = generate_components(211, 251)
     d, n = generate_components(p, q)
     tup = PUBLIC_EXPONENT, d, n
@@ -303,7 +304,7 @@ def check_coprime(prime_num):
 
 def generate_components(p, q):
     """
-    :author Josiah clausen
+    :author Josiah Clausen
     :param p: prime number 1
     :param q: prime number 2
     :return: a tuple of the private and public key
@@ -326,7 +327,6 @@ def generate_components(p, q):
     return t, n
 
 
-
 def apply_key(key, m):
     """
     Apply the key, given as a tuple (e,n) or (d,n) to the message.
@@ -340,7 +340,7 @@ def apply_key(key, m):
              and returns the ciphertext.
     """
     mod, n = key
-    message = (m**mod) % n
+    message = m**mod % n
     return message
 
 
@@ -355,15 +355,57 @@ def break_key(pub):
     :param pub: a tuple containing the public key (e,n)
     :return: a tuple containing the private key (d,n)
     """
-    #broken = False
-#/while not broken:
-    pass
+    e, n = pub
+    q, p = find_n_and_q(n)
+    private_key = find_private_key(p, q)
+    n = p*q
+    return private_key, n
+
 
 def find_n_and_q(public_key):
+    """
+    :author Josiah Clausen
+    :param public_key:
+    :return:
+    """
+    n = -1
+    q = -1
+    for x in range(2, int(public_key / 2)):
+        if public_key % x == 0:
+            if find_if_prime(x):
+                if find_if_prime(public_key / x):
+                    n = x
+                    q = int(public_key / x)
+                    if not (n - 1) % PUBLIC_EXPONENT != 0 and (q - 1) % PUBLIC_EXPONENT != 0:
+                        n = -1
+                        q = -1
+    return n, q
 
-    return 1
 
-# Your code and additional functions go here. (Replace this line.)
+def find_if_prime(number):
+    """
+    :author Josiah clausen
+    :param number: the number that is being checked if it is prime
+    :return: true or false if the number is prime
+    """
+    for x in range(2, int(number)):
+        if number % x == 0:
+            return False
+    return True
+
+
+def find_private_key(p, q):
+    """
+    :author Josiah Clausen
+    :param p: this is one of the prime numbers to make the private key
+    :param q: this is one of the prime numbers to make the private key
+    :return: the private key with acess to the two prime numbers
+    """
+    totient = (p-1)*(q-1)
+    for x in range(1, int(totient)):
+        if x*PUBLIC_EXPONENT % totient == 1:
+            return x
+    return -1
 
 # ---------------------------------------
 # Do not modify code below this line
