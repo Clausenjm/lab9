@@ -366,7 +366,7 @@ def find_n_and_q(public_key):
     """
     :author Josiah Clausen
     :param public_key:
-    :return:
+    :return: returns a pair of the the prime numbers used to create a public key
     """
     n = -1
     q = -1
