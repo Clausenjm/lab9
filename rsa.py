@@ -48,6 +48,11 @@ We had a little difficulty and confusion around a couple components in our break
 but after talking to the professor we were able to get it all figured out. There were no parts of this lab
 that we disliked or considered as needing any changes.
 
+JY: Key examples:
+35389, 55161 -- bad?
+(41417, 50745) -- works for some but not others...
+(6833, 58563) -- bad?
+
 
 """
 import math
@@ -217,7 +222,6 @@ def enter_key_interactive(key_type):
     modulus = int(string_modulus)
     return (exponent, modulus)
 
-
 def compute_checksum(string):
     """
     Compute simple hash
@@ -258,10 +262,8 @@ def create_keys():
 
     :return: the keys as a three-tuple: (e,d,n)
     """
-    p = eight_bit_number_generator()
-    make_prime(p)
-    q = eight_bit_number_generator()
-    make_prime(q)
+    p = make_prime_num()
+    q = make_prime_num()
     d, n = generate_components(p, q)
     tup = PUBLIC_EXPONENT, d, n
     return tup
@@ -282,7 +284,7 @@ def eight_bit_number_generator():
     return int(rand)
 
 
-def make_prime(num):
+def make_prime_num():
     """
     :author: Eli Hamp
     Checks if a number is prime. If not, it adds two to the number
@@ -291,12 +293,14 @@ def make_prime(num):
     :return: prime number made from the base.
     """
     i = 2
+    num = eight_bit_number_generator()
     while i <= num/2:
         mod = num % i
         if mod != 0:
             i += 1
         else:
-            num = make_prime(num + 2)
+            num = make_prime_num()
+
     return num
 
 
@@ -385,9 +389,9 @@ def find_n_and_q(public_key):
                 if find_if_prime(public_key / x):
                     n = x
                     q = int(public_key / x)
-                    if not (n - 1) % PUBLIC_EXPONENT != 0 and (q - 1) % PUBLIC_EXPONENT != 0:
-                        n = -1
-                        q = -1
+                    # if not (n - 1) % PUBLIC_EXPONENT != 0 and (q - 1) % PUBLIC_EXPONENT != 0:
+                    #     n = -1
+                    #     q = -1
     return n, q
 
 
