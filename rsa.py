@@ -22,7 +22,6 @@ is impractical to do with modern computers in a normal amount of time.
 
 
 
-
 Question 2: Critical Step(s)
 When creating a key, Bob follows certain steps. Trudy follows other steps to break a key.
 What is the difference between Bob’s steps and Trudy’s so that Bob is able to run his steps on large numbers,
@@ -292,14 +291,9 @@ def make_prime_num():
     :param num: int input to be turned into a prime
     :return: prime number made from the base.
     """
-    i = 2
     num = eight_bit_number_generator()
-    while i <= num/2:
-        mod = num % i
-        if mod != 0:
-            i += 1
-        else:
-            num = make_prime_num()
+    if not find_if_prime(num):
+        num = make_prime_num()
 
     return num
 
@@ -401,8 +395,12 @@ def find_if_prime(number):
     :param number: the number that is being checked if it is prime
     :return: true or false if the number is prime
     """
-    for x in range(2, int(number)):
-        if number % x == 0:
+    i = 2
+    while i <= number / 2:
+        mod = number % i
+        if mod != 0:
+            i += 1
+        else:
             return False
     return True
 
