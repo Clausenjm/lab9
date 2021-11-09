@@ -8,36 +8,45 @@
 
 16-bit RSA
 
-Introduction: (Describe the lab in your own words)
-
-
+Introduction:
+This lab is designed to familiarize students with how primes are used with encryption,
+and the methods of making private and public keys. It then has the students implement a
+brute force algorithm to break the keys.
 
 
 
 Question 1: RSA Security
 In this lab, Trudy is able to find the private key from the public key. Why is this not a problem for RSA in practice?
-
+RSA in practice uses prime numbers that are so large that trying to break the keys with brute force or algorithms
+is impractical to do with modern computers in a normal amount of time.
 
 
 
 
 Question 2: Critical Step(s)
-When creating a key, Bob follows certain steps. Trudy follows other steps to break a key. What is the difference between Bob’s steps and Trudy’s so that Bob is able to run his steps on large numbers, but Trudy cannot run her steps on large numbers?
-
-
+When creating a key, Bob follows certain steps. Trudy follows other steps to break a key.
+What is the difference between Bob’s steps and Trudy’s so that Bob is able to run his steps on large numbers,
+but Trudy cannot run her steps on large numbers?
+To create a key, Bob just needs two prime numbers that fit a set of criteria. To break this, Trudy starts
+with a large number produced from the two primes, and has to find which two primes created the number.
+This requires a large amount of guess-and-checking and becomes exponentially inefficient as the
+numbers get larger.
 
 
 Checksum Activity:
-Provide a dicussion of your experiences as described in the activity.  Be sure to answer all questions.
+This activity largely expanded our understanding of the project. Without the formulas and hints on the
+paper, and the practice allowed by it, I would have been very lost. The interactive part where we used
+each other's encrypted messages to find the original message was also very helpful for making us
+understand what we were doing in the lab.
 
 
 
 
-
-Summary: (Summarize your experience with the lab, what you learned, what you liked,what you disliked, and any suggestions you have for improvement)
-
-
-
+Summary:
+    This lab was very easy to understand due to the in-class activity which we completed beforehand.
+We had a little difficulty and confusion around a couple components in our break_key and 8_bit_num_generator,
+but after talking to the professor we were able to get it all figured out. There were no parts of this lab
+that we disliked or considered as needing any changes.
 
 
 """
@@ -107,9 +116,9 @@ def compute_checksum_interactive():
 
     message = input('Please enter the message to be checksummed: ')
 
-    hash = compute_checksum(message)
-    print('Hash:', "{0:04x}".format(hash))
-    cipher = apply_key(priv, hash)
+    hsh = compute_checksum(message)
+    print('Hash:', "{0:04x}".format(hsh))
+    cipher = apply_key(priv, hsh)
     print('Encrypted Hash:', "{0:04x}".format(cipher))
 
 
@@ -146,7 +155,7 @@ def encrypt_message_interactive():
     print("Encrypted message:", encrypted)
 
 
-def decrypt_message_interactive(priv = None):
+def decrypt_message_interactive(priv=None):
     """
     Decrypt a message
     """
@@ -159,7 +168,7 @@ def decrypt_message_interactive(priv = None):
         enc_string = encrypted[i:i + 4]
         enc = int(enc_string, 16)
         dec = apply_key(priv, enc)
-        if dec >= 0 and dec < 256:
+        if 0 <= dec < 256:
             message += chr(dec)
         else:
             print('Warning: Could not decode encrypted entity: ' + enc_string)
@@ -249,15 +258,10 @@ def create_keys():
 
     :return: the keys as a three-tuple: (e,d,n)
     """
-    # generates p & q and then makes them both
-    # p r i m e
     p = eight_bit_number_generator()
     make_prime(p)
     q = eight_bit_number_generator()
     make_prime(q)
-
-
-    # d, n = generate_components(211, 251)
     d, n = generate_components(p, q)
     tup = PUBLIC_EXPONENT, d, n
     return tup
@@ -266,6 +270,8 @@ def create_keys():
 def eight_bit_number_generator():
     """
     :author: Eli Hamp
+    Generates an 8-bit number within the desired range
+    and then ensures the correct bits are set to 1's
     :return:
     """
     i = MIN_PRIME
@@ -279,8 +285,10 @@ def eight_bit_number_generator():
 def make_prime(num):
     """
     :author: Eli Hamp
-    :param num:
-    :return:
+    Checks if a number is prime. If not, it adds two to the number
+    and checks until it is prime.
+    :param num: int input to be turned into a prime
+    :return: prime number made from the base.
     """
     i = 2
     while i <= num/2:
@@ -295,8 +303,9 @@ def make_prime(num):
 def check_coprime(prime_num):
     """
     :author: Eli Hamp
-    :param prime_num:
-    :return:
+    Subtracts one from a prime number and ensures it is coprime with z
+    :param prime_num: a prime number to be checked.
+    :return: whether the number is coprime with the e
     """
     num = prime_num - 1
     return (num % PUBLIC_EXPONENT) != 0
